@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.js"></script>
+  <script src="app.js"></script>
+  <script src="app_ctl.js"></script>
+</head>
+  <body ng-app="app">
+      <div ng-controller='homeCtl' ng-init='init()'>
+      <h1>TDD template</h1>
+      
+      <div ng-click='next()'>next</div>
+      <div>{{current_value}}</div>
+      
+    </div>
+  </body>
+</html>
