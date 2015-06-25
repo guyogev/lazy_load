@@ -7,26 +7,45 @@ angular.module('app')
       return $http.get(url);
     };
 
-    var source;
-
     var get_more = function () {
       http_get('/give_me_more').then(function (response) {
-        source = Rx.Observable.from(response.data);
+        var source = Rx.Observable.from(response.data);
+        var subscription = source.subscribe(
+          function (x) {
+            $scope.model.push(x);
+          },
+          function (err) {
+            console.log('Error: ' + err);
+          },
+          function () {
+            console.log('Completed');
+          }
+        );
       });
     };
 
-    $scope.init = function () {
-      get_more();
-      $scope.next();
-      var subscription = source.subscribe(
-        function (x) { console.log('onNext: %s', x); },
-        function (e) { console.log('onError: %s', e); },
-        function () { console.log('onCompleted'); }
-      );
+    var next = function () {
+      function stillHaveData() {
+        return $scope.model.length >= $scope.index;
+      }
+      function needMoreData() {
+        return ($scope.model.length - 3) < $scope.index;
+      }
+      console.log('loading next value');
+      if (stillHaveData()) {
+        console.log('next from model');
+        $scope.current_value = $scope.model[$scope.index++];
+      }
+      if (needMoreData()) {
+        console.log('requeting more...');
+        get_more();
+      }
+    };
 
-      $interval(function () {
-        $scope.current_value = source.next();
-      }, 1000);
+    $scope.init = function () {
+      $scope.model = [];
+      $scope.index = 0;
+      $interval(next, 1000);
     };
   });
 

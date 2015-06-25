@@ -8,10 +8,14 @@
 </head>
   <body ng-app="app">
       <div ng-controller='homeCtl' ng-init='init()'>
-      <h1>TDD template</h1>
-      
-      <div ng-click='next()'>next</div>
-      <div>{{current_value}}</div>
+      <h1>Lazy Load</h1>
+
+      <div>current value = {{current_value}}</div>
+      <br>
+      <div ng-repeat='item in model'>
+        <b ng-show='$index === (index-1)'>{{item}}</b>
+        <p ng-hide='$index === (index-1)'>{{item}}</p>
+      </div>
       
     </div>
   </body>
