@@ -9,18 +9,14 @@ angular.module('app')
 
     var get_more = function () {
       http_get('/give_me_more').then(function (response) {
-        var source = Rx.Observable.from(response.data);
-        var subscription = source.subscribe(
-          function (x) {
-            $scope.model.push(x);
-          },
-          function (err) {
-            console.log('Error: ' + err);
-          },
-          function () {
-            console.log('Completed');
-          }
-        );
+        if (response.data) {
+          console.log(response.data);
+          response.data.forEach(function (item) {
+            $scope.model.push(item);
+          });
+        } else {
+          console.log('no data recived');
+        }
       });
     };
 
@@ -31,9 +27,8 @@ angular.module('app')
       function needMoreData() {
         return ($scope.model.length - 3) < $scope.index;
       }
-      console.log('loading next value');
       if (stillHaveData()) {
-        console.log('next from model');
+        console.log('process next from model');
         $scope.current_value = $scope.model[$scope.index++];
       }
       if (needMoreData()) {
